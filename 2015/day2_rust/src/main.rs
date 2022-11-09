@@ -17,14 +17,12 @@ fn part_one(file: &str) -> i32 {
     if let Ok(lines) = read_lines(file) {
         for line in lines {
             if let Ok(ln) = line {
-                println!("{}",ln);
                 // Split and map to integers
-                let mut split = ln.trim().split("x");
+                let split = ln.trim().split("x");
 
                 let lwh: Vec<i32> = split
                     .map(|x| x.parse::<i32>().unwrap())
                     .collect();
-                println!("{} {} {}", lwh[0], lwh[1], lwh[2]);
                 
 
                 // Create a Vec with the calculated side values
@@ -33,13 +31,11 @@ fn part_one(file: &str) -> i32 {
                     .enumerate()
                     .map(|(i, &x)| x * (lwh[(i+1)%3]))
                     .collect();
-                println!("{} {} {}", s[0], s[1], s[2]);
 
                 // Calculate present paper
                 //let ssum: i32 = s.iter().sum().unwrap();
                 let min = s.iter().min().unwrap();
                 let ssum: i32 = s.iter().fold(0, |acc, x| acc + 2*x);
-                println!("{}, {}", ssum, min);
                 total += ssum + min;
             }
         }
@@ -47,8 +43,27 @@ fn part_one(file: &str) -> i32 {
     return total;
 }
 
-fn main() {
-    println!("Hello, world!");
-    println!("{}", part_one("input"));
+fn part_two(file: &str) -> i32 {
+    let mut total = 0;
 
+    if let Ok(lines) = read_lines(file) {
+        for line in lines {
+            if let Ok(ln) = line {
+                let split = ln.trim().split("x");
+
+                let mut lwh: Vec<i32> = split
+                    .map(|x| x.parse::<i32>().unwrap())
+                    .collect();
+                lwh.sort();
+                let cf: i32 = lwh.iter().fold(1, |acc, x| acc * x);
+                total += (lwh[0]*2) + (lwh[1]*2) + cf;
+            }
+        }
+    }
+    return total;
+}
+
+fn main() {
+    println!("{}", part_one("input"));
+    println!("{}", part_two("input"));
 }
