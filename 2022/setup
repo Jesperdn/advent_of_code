@@ -1,0 +1,80 @@
+#!/bin/bash
+
+: ' cd_up()
+    
+    cd up n directory levels
+
+Args:
+    $1 The number of directory levels to ascend
+'
+cd_up() {
+    local n=$(($1))
+
+    for i in {0 .. n}; do
+        cd ..
+    done
+}
+
+: ' create_folder()
+    
+    create a folder based on the day
+
+Args:
+    $1 The day number
+'
+create_folder() {
+    local dir=day$1
+
+    if [[ ! -e $dir ]]; then
+        mkdir $dir
+        echo "[!] Created dir $dir in $(pwd)"
+    fi
+}
+
+copy_file() {
+    local dir=day$1
+    local filename=$2
+
+    if [[ ! -e filename ]]; then
+        cp $filename $dir
+    fi
+}
+
+rename_file() {
+    local dir=day$1
+    local old=$2
+    if [[ -e $dir ]]; then
+        cd $dir
+        mv $old $dir.py 
+        echo "[!] Created file $dir.py in $(pwd)"
+        cd_up 1
+    fi
+}
+
+create_input_files() {
+    local dir=day$1
+    echo $dir
+    if [[ -e $dir ]]; then
+        cd $dir
+        touch input
+        touch testinput
+        echo "[!] Created input files in $(pwd)"
+        cd_up 1
+    fi
+}
+
+if [[ $# -ne 2 ]]; then
+    echo "<error> Usage: bash setups <day_number> <templatefile>"
+    exit 2
+fi
+
+echo "<info> Running setup for day$1"
+if [[ -e day$1 ]]; then
+    echo "<error> Directory day$1 already exists"
+    exit 2
+fi
+create_folder $1
+copy_file $1 $2
+rename_file $1 $2
+create_input_files $1
+
