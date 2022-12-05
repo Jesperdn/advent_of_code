@@ -56,8 +56,8 @@ create_input_files() {
     echo $dir
     if [[ -e $dir ]]; then
         cd $dir
-        touch input
-        touch testinput
+        touch test.in
+        touch input.in
         echo "[!] Created input files in $(pwd)"
         cd_up 1
     fi
